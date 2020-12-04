@@ -8,13 +8,16 @@ import java.util.stream.Collectors;
 public class Day3Part1 {
     public static void main(String[] args) throws Exception {
         List<String> lines = Files.lines(Paths.get("input-day3.txt")).collect(Collectors.toList());
+        System.out.println(countTrees(lines, 3, 1));
+
+        /*
         System.out.println(countTrees(Arrays.asList(
                         ".....",
                         "...#.",
                         ".#...",
                         "....#"
                         ), 3, 1));
-        System.out.println(countTrees(lines, 3, 1));
+                        */
     }
 
     static int countTrees(List<String> lines, int right, int down) {
