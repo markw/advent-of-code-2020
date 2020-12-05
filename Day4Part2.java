@@ -46,7 +46,7 @@ public class Day4Part2 {
         if (!hairColor.matcher(passport.getOrDefault("hcl","")).matches()) return false;
         if (!nineDigits.matcher(passport.getOrDefault("pid","")).matches()) return false;
 
-        String height = passport.getOrDefault("hgt","missing");
+        String height = passport.getOrDefault("hgt","");
         Matcher heightMatcher = heightPattern.matcher(height);
 
         if (!heightMatcher.matches()) {
