@@ -48,22 +48,12 @@ public class Day4Part2 {
 
         String height = passport.getOrDefault("hgt","");
         Matcher heightMatcher = heightPattern.matcher(height);
-
-        if (!heightMatcher.matches()) {
-            //System.out.println("bad height:" + height);
-            return false;
-        }
+        if (!heightMatcher.matches()) return false;
         String units = heightMatcher.group(1);
         String unitOfMeasure = heightMatcher.group(2);
+        if ("cm".equals(unitOfMeasure) && !isIntegerBetween(150,193,units)) return false;
+        if ("in".equals(unitOfMeasure) && !isIntegerBetween(59,76,units))   return false;
 
-        if ("cm".equals(unitOfMeasure) && !isIntegerBetween(150,193,units)) {
-            //System.out.println("bad height (cm):" + height);
-            return false;
-        }
-        if ("in".equals(unitOfMeasure) && !isIntegerBetween(59,76,units)) {
-            //System.out.println("bad height (in):" + height);
-            return false;
-        }
         return true;
     }
 
