@@ -10,9 +10,8 @@ public class Day5Part2 {
         List<Integer> seatIds = Files.lines(Paths.get("input-day5.txt"))
             .map(Seat::from)
             .map(Seat::id)
+            .sorted()
             .collect(Collectors.toList());
-
-        Collections.sort(seatIds);
 
         findMySeat(seatIds).ifPresent(System.out::println);
     }
