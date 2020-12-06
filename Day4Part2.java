@@ -13,8 +13,7 @@ public class Day4Part2 {
     public static void main(String[] args) throws Exception {
 
         long count = new GroupingParser()
-            .parse("input-day4.txt")
-            .stream()
+            .stream("input-day4.txt")
             .map(Day4Part2::linesToMap)
             .filter(Day4Part2::isValidPassport)
             .count();

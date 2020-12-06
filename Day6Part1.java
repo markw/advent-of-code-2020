@@ -4,8 +4,7 @@ public class Day6Part1 {
     public static void main(String[] args) throws Exception {
 
         long count = new GroupingParser()
-            .parse("input-day6.txt")
-            .stream()
+            .stream("input-day6.txt")
             .mapToLong(Day6Part1::answers)
             .reduce(0, (a,b) -> a + b);
 

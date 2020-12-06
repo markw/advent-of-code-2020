@@ -2,6 +2,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.stream.Stream;
 
 class GroupingParser {
 
@@ -20,6 +21,10 @@ class GroupingParser {
         }
         if (current.size() > 0) groups.add(current);
         return groups;
+    }
+    
+    Stream<List<String>> stream(String fileName) {
+        return parse(fileName).stream();
     }
 
     private void handleLine(String s) {

@@ -10,8 +10,7 @@ public class Day6Part2 {
     public static void main(String[] args) throws Exception {
 
         long answeredByAll = new GroupingParser()
-            .parse("input-day6.txt")
-            .stream()
+            .stream("input-day6.txt")
             .mapToLong(Day6Part2::answeredByAll)
             .reduce(0, (a,b) -> a + b);
 
