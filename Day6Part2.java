@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 public class Day6Part2 {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         long answeredByAll = new GroupingParser()
             .stream("input-day6.txt")

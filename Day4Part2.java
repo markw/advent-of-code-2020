@@ -10,7 +10,7 @@ import java.util.regex.Matcher;
 
 public class Day4Part2 {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         long count = new GroupingParser()
             .stream("input-day4.txt")

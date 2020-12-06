@@ -1,7 +1,7 @@
 import java.util.List;
 
 public class Day6Part1 {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         long count = new GroupingParser()
             .stream("input-day6.txt")

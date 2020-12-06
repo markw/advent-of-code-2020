@@ -8,7 +8,7 @@ import java.util.StringTokenizer;
 
 public class Day4Part1 {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         long count = new GroupingParser()
             .stream("input-day4.txt")
             .map(Day4Part1::linesToMap)
