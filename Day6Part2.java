@@ -8,8 +8,13 @@ import java.util.Set;
 
 public class Day6Part2 {
     public static void main(String[] args) throws Exception {
-        List<List<String>> groups = new GroupingParser().parse("input-day6.txt");
-        long answeredByAll = groups.stream().mapToLong(Day6Part2::answeredByAll).reduce(0, (a,b) -> a + b);
+
+        long answeredByAll = new GroupingParser()
+            .parse("input-day6.txt")
+            .stream()
+            .mapToLong(Day6Part2::answeredByAll)
+            .reduce(0, (a,b) -> a + b);
+
         System.out.println(answeredByAll);
     }
 
