@@ -1,9 +1,5 @@
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Collections;
 import java.util.stream.Stream;
 import java.util.stream.Collectors;
 import java.util.Map;
@@ -14,15 +10,16 @@ import java.util.regex.Matcher;
 
 public class Day4Part2 {
 
-    static final List<Map<String,String>> passports = new ArrayList<>();
-    static Map<String,String> current = new HashMap<>();
-
     public static void main(String[] args) throws Exception {
-        //System.out.println(hairColor.matcher("#123456").matches());
-        Files.lines(Paths.get("input-day4.txt")).forEach(Day4Part2::handleLine);
-        if (!current.isEmpty()) passports.add(current);
 
-        System.out.println(passports.stream().filter(Day4Part2::isValidPassport).count());
+        long count = new GroupingParser()
+            .parse("input-day4.txt")
+            .stream()
+            .map(Day4Part2::linesToMap)
+            .filter(Day4Part2::isValidPassport)
+            .count();
+
+        System.out.println(count);
     }
 
     static boolean isIntegerBetween(int min, int max, String s) {
@@ -57,17 +54,16 @@ public class Day4Part2 {
         return true;
     }
 
-    static void handleLine(String s) {
-        if (s.trim().isEmpty()) {
-            if (!current.isEmpty()) passports.add(current);
-            current = new HashMap<>();
-            return;
-        }
-        StringTokenizer st = new StringTokenizer(s);
-        while (st.hasMoreElements()) {
-            String[] tokens = st.nextToken().split(":");
-            current.put(tokens[0], tokens[1]);
-        }
+    static Map<String,String> linesToMap(List<String> lines) {
+        final Map<String,String> map = new HashMap<>();
+        lines.forEach(line -> {
+            StringTokenizer st = new StringTokenizer(line);
+            while (st.hasMoreElements()) {
+                String[] tokens = st.nextToken().split(":");
+                map.put(tokens[0], tokens[1]);
+            }
+        });
+        return map;
     }
 }
 
