@@ -2,11 +2,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 import java.util.Collections;
-import java.util.Scanner;
-import java.util.regex.MatchResult;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
 
 public class Day7Part2 {
@@ -22,8 +19,8 @@ public class Day7Part2 {
     static int numberOfContainedBags(String color, int count, Map<String,List<Bag>> rules) {
         List<Bag> containedBags = rules.get(color);
         int size = containedBags.size();
-        return rules.isEmpty() 
-            ? count 
+        return rules.isEmpty()
+            ? count
             : containedBags.stream()
                 .mapToInt(bag -> bag.count + bag.count * numberOfContainedBags(bag.color, bag.count, rules))
                 .reduce(0, (a, b) -> a + b);
