@@ -15,7 +15,7 @@ public class Day7Part2 {
             .map(Day7Part2::parseRule)
             .collect(Collectors.toMap(Bag::getColor, Bag::getContainedBags));
 
-        System.out.println("Answer: " + numberOfContainedBags("shiny gold", 0, rules));
+        System.out.println(numberOfContainedBags("shiny gold", 0, rules));
     }
 
     static int numberOfContainedBags(String color, int count, Map<String,List<Bag>> rules) {
