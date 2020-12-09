@@ -15,7 +15,7 @@
     (if (empty? tokens)
       bags
       (let [color (make-color tokens 1)
-            number (Integer/parseInt (nth tokens 0))]
+            number (Integer. (nth tokens 0))]
         (recur (drop 4 tokens)
                (conj bags (bag color number [])))))))
 
@@ -24,7 +24,7 @@
   (let [tokens (tokenize line)
         color (make-color tokens 0)
         s (nth tokens 4)
-        cnt (if (= "no" s) 0 (Integer/parseInt s))
+        cnt (if (= "no" s) 0 (Integer. s))
         contained (if (zero? cnt) [] (make-contained-bags (drop 4 tokens)))]
       (bag color cnt contained)))
 
