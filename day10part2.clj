@@ -3,19 +3,19 @@
 ;;(def xs [1 2 3 4 5])
 (def xs (map #(Integer. %)(.split (slurp "input-day10.txt") "\n")))
 
-(defn can-skip?
+(defn reachable?
   [a b]
   (<= (- b a) 3))
 
 (defn tree
   [xs]
-  (loop [xs xs acc {}]
+  (loop [xs xs accum {}]
     (if (= 1 (count xs))
-      acc
-      (let [n (first xs)
-            ys (take 3 (rest xs))
-            can-skip (filter (partial can-skip? n) ys)]
-        (recur (rest xs)(assoc acc n can-skip))))))
+      accum
+      (let [head (first xs)
+            tail (rest xs)
+            reachable (filter (partial reachable? head) tail)]
+        (recur tail (assoc accum head reachable))))))
 
 (def count-paths
   (memoize 
@@ -28,7 +28,7 @@
                       nodes)))))))
 
 (let [highest (apply max xs)
-      all-xs (vec (sort (conj xs 0 (+ 3 highest))))]
+      all-xs (sort (conj xs 0 (+ 3 highest)))]
   ;;(println (tree all-xs))
   (println (count-paths (tree all-xs) (first all-xs))))
 
