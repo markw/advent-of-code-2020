@@ -8,14 +8,22 @@
   [filename]
   (mapv vec (.split (slurp filename) "\n")))
 
-(defn occupied? [seat] (= \# seat))
+(defn occupied-seat? [seat] (= \# seat))
+(defn empty-seat? [seat] (= \L seat))
+
+(def offsets [[0 1][1 0][0 -1][-1 0][1 1][1 -1][-1 1][-1 -1]])
+
+(def neighbor-rcs
+  (memoize 
+    (fn [rc]
+      (mapv (fn [a b] (mapv + a b)) 
+            (repeat rc) 
+            offsets))))
 
 (defn neighbors
   [layout rc]
-  ;;(println rc)
-  (let [offsets [[0 1][1 0][0 -1][-1 0][1 1][1 -1][-1 1][-1 -1]]
-        rcs (mapv (fn [a b] (mapv + a b)) (repeat rc) offsets)]
-    (filter some? (map (partial get-in layout) rcs))))
+  (filter some? (map (partial get-in layout) 
+                     (neighbor-rcs rc))))
 
 (defn seat-with-neighbors
   [layout rc] 
@@ -23,11 +31,17 @@
    :seat (get-in layout rc) 
    :neighbors (neighbors layout rc)})
 
+(def layout-rcs
+  (memoize
+    (fn [num-rows num-cols]
+      (for [r (range num-rows) c (range num-cols)] 
+        [r c]))))
+
 (defn apply-rules
   [layout]
   (let [num-rows (count layout)
         num-cols (count (first layout))
-        rcs (for [r (range num-rows) c (range num-cols)] [r c])
+        rcs (layout-rcs num-rows num-cols)
         seats (mapv (partial seat-with-neighbors layout) rcs)]
     ;;(doseq [seat seats] (println seat))
     (loop [seats seats new-layout layout] 
@@ -37,13 +51,12 @@
         (let [seat (first seats)
               seat-val (:seat seat)
               neighbors (:neighbors seat)
-              num-occupied-neighbors (get (frequencies neighbors) \# 0)]
-          ;;(println "seat=" seat "=L?" (= \L (:seat seat)) "=#?" (= \# (:seat seat)) "freqs" (frequencies (:neighbors seat)))
+              num-occupied-neighbors (fn [] (count (filter occupied-seat? neighbors)))]
           (cond
-            (and (= \L seat-val)(= 0 num-occupied-neighbors))
+            (and (empty-seat? seat-val)(zero? (num-occupied-neighbors)))
             (recur (rest seats) (assoc-in new-layout (:rc seat) \#))
 
-            (and (= \# seat-val)(<= 4 num-occupied-neighbors))
+            (and (occupied-seat? seat-val)(<= 4 (num-occupied-neighbors)))
             (recur (rest seats) (assoc-in new-layout (:rc seat) \L))
           
             :default (recur (rest seats) new-layout)))))))
@@ -62,4 +75,6 @@
       final-layout (apply-rules-repeatedly layout)]
   (show-layout layout)
   (show-layout final-layout)
-  (println (count (filter occupied? (flatten final-layout)))))
+  (let [expected-num-occupied 2494
+        num-occupied(count (filter occupied-seat? (flatten final-layout)))]
+    (assert (= expected-num-occupied num-occupied)(str expected-num-occupied "!=" num-occupied))))
