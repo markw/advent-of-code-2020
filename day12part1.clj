@@ -42,5 +42,5 @@
 (assert-equal {\N 10 \E 0 \W 0 \S 8 \D \S} (navigate ["N10" "R90" "F8"])) 
 (assert-equal 18 (manhattan-distance {\N 11 \E 3 \W 17 \S 7 \D \S}))
 
-(let [instructions (.split (slurp "day12-input.txt") "\n")]
+(let [instructions (.split (slurp "input-day12.txt") "\n")]
   (println (manhattan-distance (navigate instructions))))

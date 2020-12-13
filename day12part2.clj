@@ -68,6 +68,6 @@
 
 (assert-equal 286 (manhattan-distance (:distances (navigate ["F10" "N3" "F7" "R90" "F11"]))))
 
-(let [instructions (.split (slurp "day12-input.txt") "\n")]
+(let [instructions (.split (slurp "input-day12.txt") "\n")]
   (println (manhattan-distance (:distances (navigate instructions)))))
 
