@@ -3,30 +3,33 @@
 (def starting [0,5,4,1,10,14,7])
 
 (def target 30000000)
+;(def target 2020)
 
-(def starting-spoken-before
+(def target-index (inc target))
+
+(def starting-spoken
   (reduce
     (fn [acc [n index]]
-      (assoc acc index (list n n)))
+      (assoc acc index [n n]))
     (vec (repeat target nil))
     (map vector (drop 1 (range)) starting)))
 
-(defn spoken-before?
-  [m k]
-  (>= (count (get m k)) 2))
+(defn next-indices
+  [spoken next-spoken index]
+  (let [prev-index (get spoken next-spoken)]
+    (if (nil? prev-index)
+      [index index]
+      [index (get prev-index 0)])))
 
-(defn update-indices
-  [m k n]
-  (let [indices (get m k)
-        new-indices (if (nil? indices)
-                      (list n n)
-                      (list n (first indices)))]
-    (assoc m k new-indices)))
-
-(loop [spoken-before starting-spoken-before
-       last-spoken (last starting)
-       index (inc (count starting))]
-  (if (= target (dec index))
-    (println "Answer: " last-spoken)
-    (let [next-n (reduce - (get spoken-before last-spoken))]
-      (recur (update-indices spoken-before next-n index) next-n (inc index)))))
+(time
+  (loop [spoken starting-spoken
+         last-spoken (last starting)
+         index (inc (count starting))]
+    (if (= target-index index)
+      (println "Answer: " last-spoken)
+      (let [next-spoken (reduce - (get spoken last-spoken))]
+        (recur (assoc spoken 
+                      next-spoken 
+                      (next-indices spoken next-spoken index))
+               next-spoken 
+               (inc index))))))
