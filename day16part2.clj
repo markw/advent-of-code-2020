@@ -20,9 +20,6 @@
     (or (between? r0 n)
         (between? r1 n))))
 
-(defn show [s] 
-  (println s) s)
-
 (defn s-to-validator
   [s]
   (let [[f-name, f-ranges] (.split s ":")
