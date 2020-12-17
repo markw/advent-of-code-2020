@@ -1,0 +1,22 @@
+{
+"zone" 0 
+"arrival station" 1
+"departure time" 2
+"price" 3
+"duration" 4
+"type" 5
+"row" 6
+"train" 7
+"departure location" 8
+"wagon" 9
+"arrival platform" 10
+"departure platform" 11
+"route" 12
+"arrival location" 13
+"departure track" 14
+"seat" 15
+"arrival track" 16
+"departure station" 17
+"class" 18
+"departure date" 19
+}
