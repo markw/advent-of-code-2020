@@ -23,29 +23,29 @@
   [s]
   (vec (filter seq (.split s " "))))
 
-(defn expand-rule 
+(defn expand-rule
   [rules id]
-  (if (= "|" id) 
+  (if (= "|" id)
     id
     (let [rule (get rules id)]
       (condp = rule
         "a" rule
         "b" rule
-        (str "(" 
+        (str "("
              (apply str (mapv (partial expand-rule rules) (tokenize-rule rule)))
              ")")))))
 
-(defn append-to-tree
-  [m m']
-  (if (empty? m)
-    m'
-    (clojure.walk/walk 
+(defn add-tree
+  [t t']
+  (if (empty? t)
+    t'
+    (clojure.walk/walk
       (fn f [[k v]]
         (if (empty? v)
-          [k m']
+          [k t']
           [k (clojure.walk/walk f identity v)]))
       identity
-      m)))
+      t)))
 
 (defn deep-merge-with
   [f & maps]
@@ -59,26 +59,28 @@
 (defn mapify
   [s]
   ;(prn "mapify" s)
-  (loop [tokens s m {} stack [] terms []]
+  (loop [tokens s tree {} stack [] branches []]
     (if (empty? tokens)
-      m
-      (let [t (first tokens)]
-        ;(println "t" t "m" m "terms" terms "stack" stack)
-        (condp = t
-          \( (recur (rest tokens) {} (conj stack {:m m :terms terms}) [])
+      tree
+      (let [ch (first tokens)]
+        ;(println "ch" ch "branches" branches "stack" stack "tree" tree)
+        (condp = ch
+          \( (recur (rest tokens) {} (conj stack {:tree tree :branches branches}) [])
 
-          \) (let [m' (append-to-tree 
-                        (:m (last stack)) 
-                        (apply deep-merge-with conj (conj terms m)))]
-              (recur (rest tokens) m' (pop stack) (:terms (last stack))))
+          \) (recur (rest tokens)
+                    (add-tree
+                      (:tree (peek stack))
+                      (apply deep-merge-with conj (conj branches tree)))
+                    (pop stack)
+                    (:branches (peek stack)))
 
-          \| (recur (rest tokens) {} stack (conj terms m))
+          \| (recur (rest tokens) {} stack (conj branches tree))
 
-          (let [k (keyword (str t))]
-            (recur (rest tokens) 
-                   (append-to-tree m {k {}})
+          (let [k (keyword (str ch))]
+            (recur (rest tokens)
+                   (add-tree tree {k {}})
                    stack
-                   terms)))))))
+                   branches)))))))
 
 (defn matches?
   [m s]
@@ -91,16 +93,17 @@
         (recur (k m)(rest s))
         false))))
 
-(let [input (lines "input-day19.txt")
-      rules (filter rule? input)
-      rule-map (into {} (map parse-rule rules))
-      messages (filter message? input)
-      rule0 (expand-rule rule-map "0")]
-  (prn 
-    (count 
-      (filter 
-        (partial matches? (mapify rule0))
-        messages))))
+(time
+  (let [input (lines "input-day19.txt")
+        rules (filter rule? input)
+        rule-map (into {} (map parse-rule rules))
+        messages (filter message? input)
+        rule0 (expand-rule rule-map "0")]
+    (prn
+      (count
+        (filter
+          (partial matches? (mapify rule0))
+          messages)))))
 
 (comment "tests------------------------------------------------")
 
@@ -192,7 +195,7 @@
   (assert-matches rule  "babb"))
 
 (let [input (lines "input-day19-sample.txt")
-      rules (filter rule? input)     
+      rules (filter rule? input)
       messages (filter message? input)
       rule-map (into {} (map parse-rule rules))
       rule0 (mapify (expand-rule rule-map "0"))
