@@ -99,9 +99,23 @@
 
 (load-file "rules.clj")
 
-(defmacro debug
-  [name v expr]
-  `(let [_# (println ~name ~v "<-")
-         r# ~expr]
-     (println ~name ~v "->" r#)
-     r#))
+(let [input (lines "./input-day19.txt")
+      rules (mapv
+              (fn [rule]
+                (condp = (:id rule)
+                  8  (->Rule 8 nil [[42][42 8]])
+                  11 (->Rule 11 nil [[42 31][42 11 31]])
+                  rule))
+              (parse-rules (filter rule? input)))
+      messages (filter message? input)]
+  (spit "rules.clj" (format rules-template 
+                            (apply str (map rule-fn rules))
+                            (apply str (map prn-str messages)))))
+(load-file "rules.clj")
+
+;;(defmacro debug
+;;  [name v expr]
+;;  `(let [_# (println ~name ~v "<-")
+;;         r# ~expr]
+;;     (println ~name ~v "->" r#)
+;;     r#))
